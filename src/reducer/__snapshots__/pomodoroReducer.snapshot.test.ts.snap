@@ -1,0 +1,20 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`Reducer snapshots > focus → shortBreak snapshot 1`] = `
+{
+  "autoStartNext": true,
+  "darkMode": true,
+  "focusCount": 1,
+  "mode": "shortBreak",
+  "running": true,
+  "secondsLeft": 300,
+  "settings": {
+    "focusMinutes": 25,
+    "longBreakMinutes": 15,
+    "sessionsBeforeLongBreak": 4,
+    "shortBreakMinutes": 5,
+  },
+  "soundEnabled": true,
+  "volume": 0.5,
+}
+`;

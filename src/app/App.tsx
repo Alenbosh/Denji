@@ -1,12 +1,14 @@
-import { useReducer, useEffect, useRef } from "react";
+import { useState, useReducer, useEffect, useRef } from "react";
 import { Routes, Route } from "react-router-dom";
-import Layout from "./Layout"
-import TimerPage from "../pages/TimerPage"
-import StatsPage from "../pages/StatsPage"
-import SettingsPage from "../pages/SettingsPage"
+import Layout from "./Layout";
+import TimerPage from "../pages/TimerPage";
+import StatsPage from "../pages/StatsPage";
+import SettingsPage from "../pages/SettingsPage";
 import { initAudio, playBeepSafe } from "../utils/sound";
 import { getISTTime } from "../utils/time";
 import { saveSession, loadSettings } from "../utils/storage";
+import type { PomodoroSession } from "../types";
+import { loadSessions } from "../utils/storage";
 
 import {
   pomodoroReducer,
@@ -34,11 +36,26 @@ export default function App() {
 
   const startTimeRef = useRef<string>("");
 
+  const [sessions, setSessions] = useState<PomodoroSession[]>(() =>
+    loadSessions()
+  );
+
   usePomodoroEngine(state.running, dispatch);
 
   // 🔔 Completion (ONE effect)
+
+  const completedRef = useRef(false);
+
   useEffect(() => {
-    if (state.secondsLeft !== 0 || state.running) return;
+    if (state.secondsLeft === 0 && state.running) {
+      completedRef.current = true;
+      return;
+    }
+
+    if (state.secondsLeft !== 0 || state.running || !completedRef.current)
+      return;
+
+    completedRef.current = false;
 
     playBeepSafe(state.soundEnabled, state.volume, 660);
 
@@ -48,7 +65,7 @@ export default function App() {
       });
     }
 
-    saveSession({
+    const newSession: PomodoroSession = {
       type: state.mode,
       duration:
         state.mode === "focus"
@@ -58,9 +75,13 @@ export default function App() {
           : state.settings.longBreakMinutes,
       startedAtIST: startTimeRef.current,
       completedAtIST: getISTTime(),
-    });
+    };
+
+    setSessions((prev) => [...prev, newSession]);
+    saveSession(newSession);
 
     dispatch({ type: "COMPLETE" });
+    dispatch({ type: "APPLY_PENDING_SETTINGS" });
   }, [state.secondsLeft, state.running]);
 
   // 🔔 Ask notification permission
@@ -93,7 +114,11 @@ export default function App() {
         e.preventDefault();
         dispatch({ type: state.running ? "PAUSE" : "START" });
       }
-      if (e.key === "r") dispatch({ type: "RESET" });
+      if (e.key === "r") {
+        dispatch({ type: "RESET" });
+        dispatch({ type: "APPLY_PENDING_SETTINGS" }); // 👈 HERE
+      }
+
       if (e.key === "s") dispatch({ type: "SKIP" });
     };
 
@@ -108,7 +133,15 @@ export default function App() {
   }
 
   return (
-    <PomodoroContext.Provider value={{ state, dispatch, start }}>
+    <PomodoroContext.Provider
+      value={{
+        state,
+        dispatch,
+        start,
+        sessions,
+        setSessions,
+      }}
+    >
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<TimerPage />} />

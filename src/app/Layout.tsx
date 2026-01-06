@@ -1,7 +1,8 @@
-import { Outlet, NavLink } from "react-router-dom"
-import "../styles/App.css"
+import { Outlet, NavLink, useLocation } from "react-router-dom";
 
 export default function Layout() {
+  const location = useLocation();
+
   return (
     <div className="app">
       <nav className="nav">
@@ -10,9 +11,10 @@ export default function Layout() {
         <NavLink to="/settings">Settings</NavLink>
       </nav>
 
-      <main className="content">
+      {/* 👇 key triggers animation on route change */}
+      <main className="route-container" key={location.pathname}>
         <Outlet />
       </main>
     </div>
-  )
+  );
 }

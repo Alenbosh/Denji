@@ -1,16 +1,21 @@
-import { getSessions } from "../utils/storage"
+import type { PomodoroSession } from "../types";
 
-export function Stats() {
-  const sessions = getSessions()
-  const focusMinutes = sessions
-    .filter(s => s.type === "focus")
-    .reduce((a, b) => a + b.duration, 0)
+interface Props {
+  sessions: PomodoroSession[];
+}
+
+export function Stats({ sessions }: Props) {
+  if (sessions.length === 0) {
+    return <p>No sessions yet.</p>;
+  }
 
   return (
-    <div>
-      <h3>Stats</h3>
-      <p>Total focus minutes: {focusMinutes}</p>
-      <p>Total sessions: {sessions.length}</p>
-    </div>
-  )
+    <ul>
+      {sessions.map((s, i) => (
+        <li key={i}>
+          {s.type} — {s.duration} min
+        </li>
+      ))}
+    </ul>
+  );
 }

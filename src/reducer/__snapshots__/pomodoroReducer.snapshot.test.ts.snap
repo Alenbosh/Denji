@@ -2,10 +2,18 @@
 
 exports[`Reducer snapshots > focus → shortBreak snapshot 1`] = `
 {
+  "applyAfterSession": true,
   "autoStartNext": true,
   "darkMode": true,
+  "defaultSettings": {
+    "focusMinutes": 25,
+    "longBreakMinutes": 15,
+    "sessionsBeforeLongBreak": 4,
+    "shortBreakMinutes": 5,
+  },
   "focusCount": 1,
   "mode": "shortBreak",
+  "pendingSettings": undefined,
   "running": true,
   "secondsLeft": 300,
   "settings": {

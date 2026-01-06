@@ -13,3 +13,10 @@ export interface PomodoroSession {
   startedAtIST: string
   completedAtIST: string
 }
+
+export const DEFAULT_SETTINGS: PomodoroSettings = {
+  focusMinutes: 25,
+  shortBreakMinutes: 5,
+  longBreakMinutes: 15,
+  sessionsBeforeLongBreak: 4,
+};

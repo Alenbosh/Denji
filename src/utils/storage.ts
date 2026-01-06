@@ -4,9 +4,9 @@ const SESSION_KEY = "pomoSessions"
 const SETTINGS_KEY = "pomoSettings"
 
 export function saveSession(session: PomodoroSession) {
-  const existing = JSON.parse(localStorage.getItem(SESSION_KEY) || "[]")
-  existing.push(session)
-  localStorage.setItem(SESSION_KEY, JSON.stringify(existing))
+  const existing = loadSessions();
+  const updated = [...existing, session];
+  localStorage.setItem("sessions", JSON.stringify(updated));
 }
 
 export function getSessions(): PomodoroSession[] {
@@ -19,4 +19,18 @@ export function saveSettings(settings: PomodoroSettings) {
 
 export function loadSettings(defaults: PomodoroSettings): PomodoroSettings {
   return JSON.parse(localStorage.getItem(SETTINGS_KEY) || "null") ?? defaults
+}
+
+export function resetSettings(defaults: PomodoroSettings) {
+  localStorage.setItem("settings", JSON.stringify(defaults))
+}
+
+export function loadSessions(): PomodoroSession[] {
+  const raw = localStorage.getItem("sessions");
+  return raw ? JSON.parse(raw) : [];
+}
+
+
+export function clearSessions() {
+  localStorage.removeItem("sessions")
 }

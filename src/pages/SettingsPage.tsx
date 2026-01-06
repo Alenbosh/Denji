@@ -15,7 +15,13 @@ export default function SettingsPage() {
           settings={state.settings}
           pendingSettings={state.pendingSettings} 
           running={state.running}
-          onChange={(s) => dispatch({ type: "UPDATE_SETTINGS", payload: s })}
+          onChange={(s) => {
+            dispatch({ type: "UPDATE_SETTINGS", payload: s });
+            // Save to localStorage if timer is not running (settings apply immediately)
+            if (!state.running) {
+              saveSettings(s);
+            }
+          }}
         />
 
         <SettingsPreferences
@@ -31,10 +37,6 @@ export default function SettingsPage() {
             dispatch({ type: "RESET_SETTINGS" });
             saveSettings(state.defaultSettings);
           }}
-          applyAfterSession={state.applyAfterSession}
-          onToggleApplyAfterSession={() =>
-            dispatch({ type: "TOGGLE_APPLY_AFTER_SESSION" })
-          }
         />
       </div>
     </section>

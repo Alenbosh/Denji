@@ -98,11 +98,10 @@ describe("Pomodoro reducer", () => {
 ========================= */
 
 describe("Pending settings behavior", () => {
-  it("stores pending settings when running and applyAfterSession is true", () => {
+  it("stores pending settings when running", () => {
     const state = {
       ...createInitialState(settings),
       running: true,
-      applyAfterSession: true,
     };
 
     const newSettings = {
@@ -167,4 +166,55 @@ describe("Pending settings behavior", () => {
 
     expect(next).toEqual(state);
   });
+  it("applies pending settings automatically on COMPLETE", () => {
+    const pending = {
+      ...settings,
+      focusMinutes: 30,
+    };
+
+    const state = {
+      ...createInitialState(settings),
+      mode: "focus" as const,
+      running: false,
+      pendingSettings: pending,
+    };
+
+    const next = pomodoroReducer(state, { type: "COMPLETE" });
+
+    expect(next.settings.focusMinutes).toBe(30);
+    expect(next.pendingSettings).toBeUndefined();
+    expect(next.secondsLeft).toBe(5 * 60); // short break
+  });
+
+  it("RESET applies pending settings immediately", () => {
+    const pending = {
+      ...settings,
+      focusMinutes: 45,
+    };
+
+    const state = {
+      ...createInitialState(settings),
+      mode: "focus" as const,
+      pendingSettings: pending,
+    };
+
+    const next = pomodoroReducer(state, { type: "RESET" });
+
+    expect(next.settings.focusMinutes).toBe(45);
+    expect(next.pendingSettings).toBeUndefined();
+    expect(next.secondsLeft).toBe(45 * 60);
+  });
+
+  it("auto-start starts next session after COMPLETE", () => {
+    const state = {
+      ...createInitialState(settings),
+      autoStartNext: true,
+      running: false,
+    };
+
+    const next = pomodoroReducer(state, { type: "COMPLETE" });
+
+    expect(next.running).toBe(true);
+  });
+
 });

@@ -43,21 +43,25 @@ export default function App() {
   usePomodoroEngine(state.running, dispatch);
 
   // 🔔 Completion (ONE effect)
-
-  const completedRef = useRef(false);
+  const prevSecondsLeftRef = useRef<number>(state.secondsLeft);
 
   useEffect(() => {
-    if (state.secondsLeft === 0 && state.running) {
-      completedRef.current = true;
+    // Update ref to track previous value
+    const prevSeconds = prevSecondsLeftRef.current;
+    prevSecondsLeftRef.current = state.secondsLeft;
+
+    // Only trigger completion if:
+    // 1. secondsLeft is 0
+    // 2. It was previously > 0 (meaning it just reached 0, not already 0)
+    if (state.secondsLeft !== 0 || prevSeconds === 0) {
       return;
     }
 
-    if (state.secondsLeft !== 0 || state.running || !completedRef.current)
-      return;
-
-    completedRef.current = false;
-
-    playBeepSafe(state.soundEnabled, state.volume, 660);
+    // 🔔 feedback
+    initAudio(); // Ensure AudioContext is initialized and resumed
+    playBeepSafe(state.soundEnabled, state.volume, 660).catch(() => {
+      // Silently fail if audio can't play (e.g., browser autoplay restrictions)
+    });
 
     if (Notification.permission === "granted") {
       new Notification("Session complete", {
@@ -65,6 +69,7 @@ export default function App() {
       });
     }
 
+    // 📊 save session
     const newSession: PomodoroSession = {
       type: state.mode,
       duration:
@@ -80,9 +85,16 @@ export default function App() {
     setSessions((prev) => [...prev, newSession]);
     saveSession(newSession);
 
+    // 🔁 transition (NOT stop)
     dispatch({ type: "COMPLETE" });
-    dispatch({ type: "APPLY_PENDING_SETTINGS" });
-  }, [state.secondsLeft, state.running]);
+    
+    // If auto-start is enabled, update startTimeRef for the new session
+    if (state.autoStartNext) {
+      startTimeRef.current = getISTTime();
+    } else {
+      startTimeRef.current = "";
+    }
+  }, [state.secondsLeft, state.mode, state.settings, state.soundEnabled, state.volume, state.autoStartNext, dispatch]);
 
   // 🔔 Ask notification permission
   useEffect(() => {

@@ -12,14 +12,33 @@ export function Controls({
   onSkip: () => void
 }) {
   return (
-    <div>
-      {!running ? (
-        <button onClick={onStart}>Start</button>
-      ) : (
-        <button onClick={onPause}>Pause</button>
-      )}
-      <button onClick={onSkip}>Skip</button>
-      <button onClick={onReset}>Reset</button>
+    <div className="controls">
+      <button 
+        className="control-btn control-btn-primary"
+        onClick={running ? onPause : onStart}
+      >
+        <span className="control-icon">
+          {running ? "⏸" : "▶"}
+        </span>
+        <span>{running ? "Pause" : "Start"}</span>
+      </button>
+      
+      <div className="controls-secondary">
+        <button 
+          className="control-btn control-btn-secondary"
+          onClick={onSkip}
+        >
+          <span className="control-icon">⏭</span>
+          <span>Skip</span>
+        </button>
+        <button 
+          className="control-btn control-btn-secondary"
+          onClick={onReset}
+        >
+          <span className="control-icon">↻</span>
+          <span>Reset</span>
+        </button>
+      </div>
     </div>
   )
 }

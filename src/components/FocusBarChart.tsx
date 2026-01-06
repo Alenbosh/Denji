@@ -1,24 +1,134 @@
-import { BarChart, Bar, XAxis, Tooltip } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import type { PomodoroSession } from "../types";
+import { useMemo } from "react";
+
+function startOfDay(d: Date) {
+  return new Date(d.getFullYear(), d.getMonth(), d.getDate());
+}
+
+function formatDate(date: Date): string {
+  const today = startOfDay(new Date());
+  const yesterday = new Date(today);
+  yesterday.setDate(yesterday.getDate() - 1);
+  
+  const dateStart = startOfDay(date);
+  
+  if (dateStart.getTime() === today.getTime()) {
+    return "Today";
+  }
+  if (dateStart.getTime() === yesterday.getTime()) {
+    return "Yesterday";
+  }
+  return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+}
 
 export function FocusBarChart({ sessions }: { sessions: PomodoroSession[] }) {
-  const data = Object.values(
-    sessions.reduce((acc, s) => {
-      const day = new Date(s.completedAtIST).toLocaleDateString();
-      acc[day] ??= { day, minutes: 0 };
-      acc[day].minutes += s.duration;
-      return acc;
-    }, {} as Record<string, { day: string; minutes: number }>)
-  );
+  const data = useMemo(() => {
+    // Get last 7 days of data
+    const last7Days: { day: string; date: Date; minutes: number; sessions: number }[] = [];
+    const now = new Date();
+    
+    for (let i = 6; i >= 0; i--) {
+      const date = new Date(now);
+      date.setDate(date.getDate() - i);
+      const dayStart = startOfDay(date);
+      const nextDayStart = new Date(dayStart);
+      nextDayStart.setDate(nextDayStart.getDate() + 1);
+      
+      // Filter sessions that completed on this day
+      // Use same logic as computeAggregates: compare with start of day
+      const daySessions = sessions.filter((s) => {
+        try {
+          const completed = new Date(s.completedAtIST);
+          // For today, use same comparison as computeAggregates: >= dayStart
+          // For past days, also check it's before next day to avoid including future sessions
+          if (i === 0) {
+            // Today: match computeAggregates exactly
+            return completed >= dayStart;
+          } else {
+            // Past days: check both bounds
+            return completed >= dayStart && completed < nextDayStart;
+          }
+        } catch (e) {
+          // If date parsing fails, try to parse IST format manually
+          // Format: "DD/MM/YYYY, HH:mm:ss"
+          const datePart = s.completedAtIST.split(",")[0].trim();
+          const parts = datePart.split("/");
+          if (parts.length === 3) {
+            const [day, month, year] = parts.map(Number);
+            const completed = new Date(year, month - 1, day);
+            if (i === 0) {
+              return completed >= dayStart;
+            } else {
+              return completed >= dayStart && completed < nextDayStart;
+            }
+          }
+          return false;
+        }
+      });
+      
+      // Only count focus sessions for the bar chart
+      const focusSessions = daySessions.filter((s) => s.type === "focus");
+      const minutes = focusSessions.reduce((sum, s) => sum + s.duration, 0);
+      const sessionCount = focusSessions.length;
+      
+      last7Days.push({
+        day: formatDate(date),
+        date: dayStart,
+        minutes,
+        sessions: sessionCount,
+      });
+    }
+    
+    return last7Days;
+  }, [sessions]);
+
+  const CustomTooltip = ({ active, payload }: any) => {
+    if (active && payload && payload.length) {
+      const data = payload[0].payload;
+      return (
+        <div className="chart-tooltip">
+          <p className="tooltip-label">{data.day}</p>
+          <p className="tooltip-value">
+            {data.minutes} min {data.sessions > 0 && `(${data.sessions} session${data.sessions !== 1 ? "s" : ""})`}
+          </p>
+        </div>
+      );
+    }
+    return null;
+  };
 
   return (
     <div className="card">
-      <h3>Daily Focus</h3>
-      <BarChart width={350} height={200} data={data}>
-        <XAxis dataKey="day" hide />
-        <Tooltip />
-        <Bar dataKey="minutes" fill="#ff6b6b" />
-      </BarChart>
+      <h3>Daily Focus (Last 7 Days)</h3>
+      <ResponsiveContainer width="100%" height={250}>
+        <BarChart data={data} margin={{ top: 5, right: 10, left: 0, bottom: 5 }}>
+          <XAxis 
+            dataKey="day" 
+            tick={{ fontSize: 12 }}
+            angle={-45}
+            textAnchor="end"
+            height={60}
+          />
+          <YAxis 
+            tick={{ fontSize: 12 }}
+            label={{ value: "Minutes", angle: -90, position: "insideLeft" }}
+          />
+          <Tooltip content={<CustomTooltip />} />
+          <Bar 
+            dataKey="minutes" 
+            name="Focus Minutes"
+            radius={[4, 4, 0, 0]}
+          >
+            {data.map((entry, index) => (
+              <Cell 
+                key={`cell-${index}`} 
+                fill={entry.minutes > 0 ? "#ff6b6b" : "#e0e0e0"} 
+              />
+            ))}
+          </Bar>
+        </BarChart>
+      </ResponsiveContainer>
     </div>
   );
 }

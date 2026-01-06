@@ -2,7 +2,6 @@
 
 exports[`Reducer snapshots > focus → shortBreak snapshot 1`] = `
 {
-  "applyAfterSession": true,
   "autoStartNext": true,
   "darkMode": true,
   "defaultSettings": {

@@ -7,39 +7,60 @@ export default function TimerPage() {
   const { state, dispatch, start } = usePomodoro();
   const [justApplied, setJustApplied] = useState(false);
 
+  // Use effective settings (pending if available, otherwise current)
+  const effectiveSettings = state.pendingSettings ?? state.settings;
+
   const totalSeconds =
     state.mode === "focus"
-      ? state.settings.focusMinutes * 60
+      ? effectiveSettings.focusMinutes * 60
       : state.mode === "shortBreak"
-      ? state.settings.shortBreakMinutes * 60
-      : state.settings.longBreakMinutes * 60;
+      ? effectiveSettings.shortBreakMinutes * 60
+      : effectiveSettings.longBreakMinutes * 60;
 
   useEffect(() => {
     if (!state.pendingSettings) {
       setJustApplied(true);
-      const t = setTimeout(() => setJustApplied(false), 1200);
+      const t = setTimeout(() => setJustApplied(false), 800);
       return () => clearTimeout(t);
     }
-  }, [state.pendingSettings]);
+  }, [state.mode]); // 👈 CHANGE dependency
+
+  const modeLabels = {
+    focus: "Focus",
+    shortBreak: "Short Break",
+    longBreak: "Long Break",
+  };
 
   return (
-    <section className={`page mode-${state.mode}`}>
-      <h1 key={state.mode} className="page-title mode-title">
-        {state.mode.toUpperCase()}
-      </h1>
+    <section className={`page timer-page mode-${state.mode}`}>
+      <div className="timer-header">
+        <h1 key={state.mode} className="page-title mode-title">
+          {modeLabels[state.mode]}
+        </h1>
+        <p className="mode-subtitle">
+          {state.mode === "focus" 
+            ? "Time to focus and get things done" 
+            : state.mode === "shortBreak"
+            ? "Take a quick break to recharge"
+            : "Enjoy a longer break"}
+        </p>
+      </div>
 
-      {state.pendingSettings && (
-        <span className="pending-badge">Pending changes</span>
-      )}
+      <div className="timer-badges">
+        {state.pendingSettings && (
+          <span className="pending-badge">⏳ Pending changes</span>
+        )}
+        {justApplied && <span className="applied-badge">✓ Settings applied</span>}
+      </div>
 
-      {justApplied && <span className="applied-badge">Settings applied ✓</span>}
-
-      <Timer
-        seconds={state.secondsLeft}
-        totalSeconds={totalSeconds}
-        mode={state.mode}
-        pulse={justApplied}
-      />
+      <div className="timer-container">
+        <Timer
+          seconds={state.secondsLeft}
+          totalSeconds={totalSeconds}
+          mode={state.mode}
+          pulse={justApplied}
+        />
+      </div>
 
       <Controls
         running={state.running}
@@ -47,7 +68,7 @@ export default function TimerPage() {
         onPause={() => dispatch({ type: "PAUSE" })}
         onReset={() => {
           dispatch({ type: "RESET" });
-          dispatch({ type: "APPLY_PENDING_SETTINGS" }); // 👈 HERE
+          dispatch({ type: "APPLY_PENDING_SETTINGS" });
         }}
         onSkip={() => dispatch({ type: "SKIP" })}
       />

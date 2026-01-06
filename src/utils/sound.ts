@@ -4,15 +4,40 @@ export function initAudio() {
   if (!audioCtx) {
     audioCtx = new AudioContext()
   }
+  // Resume AudioContext if suspended (browsers suspend it by default)
+  // Note: resume() returns a promise, but we don't await it here
+  // to keep the function synchronous for compatibility
+  if (audioCtx.state === "suspended") {
+    audioCtx.resume().catch(() => {
+      // Silently fail - audio might not be allowed without user interaction
+    })
+  }
 }
 
-export function playBeepSafe(
+export async function playBeepSafe(
   enabled: boolean,
   volume: number,
   frequency = 880,
   duration = 0.15
 ) {
-  if (!enabled || !audioCtx) return   // 🔕 HARD GUARD
+  if (!enabled) return   // 🔕 HARD GUARD
+
+  // Ensure AudioContext is initialized
+  if (!audioCtx) {
+    initAudio()
+  }
+
+  if (!audioCtx) return
+
+  // Resume AudioContext if suspended
+  if (audioCtx.state === "suspended") {
+    try {
+      await audioCtx.resume()
+    } catch (e) {
+      // AudioContext might not be resumable without user interaction
+      return
+    }
+  }
 
   const osc = audioCtx.createOscillator()
   const gain = audioCtx.createGain()

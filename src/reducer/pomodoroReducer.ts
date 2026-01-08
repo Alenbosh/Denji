@@ -2,9 +2,7 @@ import type { Mode, PomodoroSettings } from "../types";
 import { minutesToSeconds } from "../utils/time";
 import { DEFAULT_SETTINGS } from "../types";
 
-/* =========================
-   State
-========================= */
+
 
 export interface PomodoroState {
   mode: Mode;
@@ -23,9 +21,7 @@ export interface PomodoroState {
   darkMode: boolean;
 }
 
-/* =========================
-   Actions
-========================= */
+
 
 export type PomodoroAction =
   | { type: "START" }
@@ -42,9 +38,7 @@ export type PomodoroAction =
   | { type: "TOGGLE_DARK_MODE" }
   | { type: "APPLY_PENDING_SETTINGS" };
 
-/* =========================
-   Initial State
-========================= */
+
 
 export function createInitialState(
   settings: PomodoroSettings
@@ -67,9 +61,7 @@ export function createInitialState(
   };
 }
 
-/* =========================
-   Helpers
-========================= */
+
 
 function getDuration(mode: Mode, s: PomodoroSettings): number {
   switch (mode) {
@@ -90,16 +82,14 @@ function assertNever(x: never): never {
   throw new Error(`Unhandled action: ${JSON.stringify(x)}`);
 }
 
-/* =========================
-   Reducer
-========================= */
+
 
 export function pomodoroReducer(
   state: PomodoroState,
   action: PomodoroAction
 ): PomodoroState {
   switch (action.type) {
-    /* ---------- Timer control ---------- */
+
 
     case "START":
       return { ...state, running: true };
@@ -114,7 +104,7 @@ export function pomodoroReducer(
       }
       return { ...state, secondsLeft: 0};
 
-    /* ---------- Session transitions ---------- */
+
 
     case "COMPLETE": {
       const effective = getEffectiveSettings(state);
@@ -192,18 +182,17 @@ export function pomodoroReducer(
       };
     }
 
-    /* ---------- Settings ---------- */
+
 
     case "UPDATE_SETTINGS":
-      // If timer is running, store as pending settings (will apply after session completes)
-      // This prevents disrupting the current session
+
       if (state.running) {
         return {
           ...state,
           pendingSettings: action.payload,
         };
       }
-      // If timer is not running, apply immediately and update secondsLeft to match new duration
+
       return {
         ...state,
         settings: action.payload,
@@ -228,7 +217,7 @@ export function pomodoroReducer(
         secondsLeft: getDuration(state.mode, state.defaultSettings),
       };
 
-    /* ---------- Toggles ---------- */
+
 
     case "TOGGLE_AUTO_START":
       return { ...state, autoStartNext: !state.autoStartNext };

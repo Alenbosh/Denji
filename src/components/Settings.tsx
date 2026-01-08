@@ -85,7 +85,7 @@ export function Settings({
         </label>
       </div>
 
-      {/* Behavior */}
+
       <div className="settings-section">
        <h3 className="section-title icon-behavior">Behavior</h3>
 
@@ -99,7 +99,7 @@ export function Settings({
         </label>
       </div>
 
-      {/* Sound & Appearance */}
+ 
       <div className="settings-section">
        <h3 className="section-title icon-sound">Sound & Appearance</h3>
 

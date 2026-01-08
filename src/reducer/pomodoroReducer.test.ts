@@ -13,9 +13,7 @@ const settings: PomodoroSettings = {
   sessionsBeforeLongBreak: 4,
 };
 
-/* =========================
-   Property-based tests
-========================= */
+
 
 describe("Property tests", () => {
   it("secondsLeft never goes below 0", () => {
@@ -34,9 +32,6 @@ describe("Property tests", () => {
   });
 });
 
-/* =========================
-   Reducer behavior tests
-========================= */
 
 describe("Pomodoro reducer", () => {
   it("starts timer", () => {
@@ -93,9 +88,7 @@ describe("Pomodoro reducer", () => {
   });
 });
 
-/* =========================
-   Pending settings behavior
-========================= */
+
 
 describe("Pending settings behavior", () => {
   it("stores pending settings when running", () => {

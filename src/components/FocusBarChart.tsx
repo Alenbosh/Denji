@@ -24,7 +24,6 @@ function formatDate(date: Date): string {
 
 export function FocusBarChart({ sessions }: { sessions: PomodoroSession[] }) {
   const data = useMemo(() => {
-    // Get last 7 days of data
     const last7Days: { day: string; date: Date; minutes: number; sessions: number }[] = [];
     const now = new Date();
     
@@ -35,23 +34,16 @@ export function FocusBarChart({ sessions }: { sessions: PomodoroSession[] }) {
       const nextDayStart = new Date(dayStart);
       nextDayStart.setDate(nextDayStart.getDate() + 1);
       
-      // Filter sessions that completed on this day
-      // Use same logic as computeAggregates: compare with start of day
+
       const daySessions = sessions.filter((s) => {
         try {
           const completed = new Date(s.completedAtIST);
-          // For today, use same comparison as computeAggregates: >= dayStart
-          // For past days, also check it's before next day to avoid including future sessions
           if (i === 0) {
-            // Today: match computeAggregates exactly
             return completed >= dayStart;
           } else {
-            // Past days: check both bounds
             return completed >= dayStart && completed < nextDayStart;
           }
         } catch (e) {
-          // If date parsing fails, try to parse IST format manually
-          // Format: "DD/MM/YYYY, HH:mm:ss"
           const datePart = s.completedAtIST.split(",")[0].trim();
           const parts = datePart.split("/");
           if (parts.length === 3) {
@@ -67,7 +59,7 @@ export function FocusBarChart({ sessions }: { sessions: PomodoroSession[] }) {
         }
       });
       
-      // Only count focus sessions for the bar chart
+     
       const focusSessions = daySessions.filter((s) => s.type === "focus");
       const minutes = focusSessions.reduce((sum, s) => sum + s.duration, 0);
       const sessionCount = focusSessions.length;

@@ -41,7 +41,7 @@ export function useSubjects() {
   return ctx
 }
 
-/* calm, non-repeating palette */
+
 const COLORS = [
   "#f59e0b",
   "#10b981",

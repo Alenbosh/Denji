@@ -2,12 +2,13 @@ import { Timer } from "../components/Timer";
 import { Controls } from "../components/Controls";
 import { usePomodoro } from "../context/PomodoroContext";
 import { useEffect, useState } from "react";
+import { FocusTip } from "../components/FocusTip";
+
 
 export default function TimerPage() {
   const { state, dispatch, start } = usePomodoro();
   const [justApplied, setJustApplied] = useState(false);
 
-  // Use effective settings (pending if available, otherwise current)
   const effectiveSettings = state.pendingSettings ?? state.settings;
 
   const totalSeconds =
@@ -23,7 +24,7 @@ export default function TimerPage() {
       const t = setTimeout(() => setJustApplied(false), 800);
       return () => clearTimeout(t);
     }
-  }, [state.mode]); // 👈 CHANGE dependency
+  }, [state.mode]);
 
   const modeLabels = {
     focus: "Focus",
@@ -45,6 +46,9 @@ export default function TimerPage() {
             : "Enjoy a longer break"}
         </p>
       </div>
+
+      {state.mode === "focus" && <FocusTip />}
+
 
       <div className="timer-badges">
         {state.pendingSettings && (

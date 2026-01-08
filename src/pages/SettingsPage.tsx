@@ -17,7 +17,6 @@ export default function SettingsPage() {
           running={state.running}
           onChange={(s) => {
             dispatch({ type: "UPDATE_SETTINGS", payload: s });
-            // Save to localStorage if timer is not running (settings apply immediately)
             if (!state.running) {
               saveSettings(s);
             }

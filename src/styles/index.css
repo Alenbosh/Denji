@@ -45,10 +45,10 @@ button:active {
     transform: translateY(0);
   }
 }
-/* ===== Design Tokens ===== */
+
 
 :root {
-  /* Colors */
+
   --bg: #0f1115;
   --surface: #1c1f26;
   --surface-2: #252936;
@@ -56,23 +56,23 @@ button:active {
   --muted: #9aa0a6;
   --accent: #ff6b6b;
 
-  /* Spacing */
+
   --space-xs: 4px;
   --space-sm: 8px;
   --space-md: 16px;
   --space-lg: 24px;
 
-  /* Radius */
+
   --radius-sm: 6px;
   --radius-md: 12px;
   --radius-lg: 20px;
 
-  /* Motion */
+
   --fast: 120ms;
   --normal: 240ms;
 }
 
-/* Light theme (optional later) */
+
 [data-theme="light"] {
   --bg: #ffffff;
   --surface: #f4f4f5;

@@ -10,6 +10,7 @@ import { getISTTime } from "../utils/time";
 import { saveSession, loadSettings } from "../utils/storage";
 import type { PomodoroSession } from "../types";
 import { loadSessions } from "../utils/storage";
+import { Analytics } from "@vercel/analytics/next"
 
 import {
   pomodoroReducer,
@@ -162,6 +163,7 @@ export default function App() {
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
       </Routes>
+      <Analytics />
       <SpeedInsights />
     </PomodoroContext.Provider>
   );

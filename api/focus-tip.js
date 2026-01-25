@@ -1,18 +1,11 @@
-import type { VercelRequest, VercelResponse } from "@vercel/node";
-
-export default async function handler(
-  _req: VercelRequest,
-  res: VercelResponse
-) {
+export default async function handler(req, res) {
   const GEMINI_ENDPOINT =
     "https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent";
 
   const API_KEY = process.env.GEMINI_API_KEY;
 
   if (!API_KEY) {
-    return res.status(500).json({
-      tip: "Focus on one task. Ignore everything else for now.",
-    });
+    return res.status(500).json({ error: "Missing GEMINI_API_KEY" });
   }
 
   const prompt = `
@@ -32,12 +25,12 @@ No emojis. No quotes. Plain text.
     const data = await response.json();
 
     const text =
-      data.candidates?.[0]?.content?.parts?.[0]?.text ??
+      data?.candidates?.[0]?.content?.parts?.[0]?.text ??
       "Focus on one task. Ignore everything else for now.";
 
     res.status(200).json({ tip: text });
-  } catch {
-    res.status(200).json({
+  } catch (err) {
+    res.status(500).json({
       tip: "Focus on one task. Ignore everything else for now.",
     });
   }

@@ -1,5 +1,6 @@
 import { useState, useReducer, useEffect, useRef } from "react";
 import { Routes, Route } from "react-router-dom";
+import { SpeedInsights } from "@vercel/speed-insights/react";
 import Layout from "./Layout";
 import TimerPage from "../pages/TimerPage";
 import StatsPage from "../pages/StatsPage";
@@ -161,6 +162,7 @@ export default function App() {
           <Route path="/settings" element={<SettingsPage />} />
         </Route>
       </Routes>
+      <SpeedInsights />
     </PomodoroContext.Provider>
   );
 }

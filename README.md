@@ -4,65 +4,113 @@
 
 **Live MVP:** [https://pochita-tau.vercel.app](https://pochita-tau.vercel.app)
 
-Denji is a **desktop-first productivity application** built with React and TypeScript, centered around **deep focus, intentional time tracking, and clean state management**.
+Denji is a **desktop-first productivity application** built with **React + TypeScript**, designed around deep focus, intentional time tracking, and clean state management.
 
-At its core, Denji is a **Pomodoro engine**, but it is intentionally designed to grow into a **student productivity OS** — supporting focus sessions, stats, habits, tasks, subjects, and exam planning over time.
-@@ -25,15 +29,6 @@ At its core, Denji is a **Pomodoro engine**, but it is intentionally designed to
-  * **runtime state** (seconds left, running, mode)
-  * **configuration state** (durations, preferences)
-
-### ⏳ Deferred Settings Application
-
-* Duration changes during a running session are **not applied immediately**
-* Changes are stored as **pending settings**
-* Pending settings apply:
-
-  * when a session completes
-  * when the user presses Reset
-* This avoids accidental timer resets and preserves focus
-
-### 🔔 Feedback & UX Clarity
-
-@@ -145,6 +140,17 @@ Denji avoids “everything happens instantly” design in favor of **intentional
-* **LocalStorage** (persistence)
-* **CSS (desktop-first, no heavy UI frameworks)**
+At its core, Denji is a powerful **Pomodoro engine**, built to evolve into a full **Student Productivity OS** — supporting focus sessions, habits, tasks, subjects, and exam planning.
 
 ---
 
-## 🧠 Google Technologies Used
-- Google Chrome  
-- Chrome DevTools  
-- Google Gemini API  
+## ✨ Core Features
 
-## Google AI Tools Integrated
-- Google Gemini API for generating contextual productivity and focus tips
+### ⏱ Pomodoro Engine
 
+* Focus / Short Break / Long Break modes
+* Automatic session transitions
+* Manual reset & session control
+* Persistent session tracking
+
+### ⚙️ Intelligent State Management
+
+* Clear separation of:
+
+  * **Runtime state** (seconds left, running status, mode)
+  * **Configuration state** (durations, preferences)
+* Stable and predictable timer behavior
+
+### 🔔 Clear UX Feedback
+
+* Visual session state clarity
+* Intentional interaction design
+* No accidental timer disruptions
+
+### 🤖 AI-Powered Focus Tips
+
+* Integrated with **Google Gemini API**
+* Generates contextual productivity and focus suggestions
+* Designed to feel supportive, not distracting
 
 ---
 
-## 🔮 Planned / Conceptual Features (Not Implemented Yet)
-@@ -179,4 +185,25 @@ but never chaotic.
+## 🧠 Tech Stack
+
+* **React**
+* **TypeScript**
+* **Vite**
+* **LocalStorage** (data persistence)
+* **Google Gemini API**
+* **CSS (desktop-first, lightweight styling)**
 
 ---
 
-## 📝 MVP Features (Submission-ready)
-- Pomodoro Timer Engine with Focus / Break modes  
-- Configurable durations  
-- Automatic session transitions  
-- AI-powered Focus Tips using Google Gemini  
-- Clear, intentional UX and state feedback  
-- Persistent session tracking
+## 🚀 MVP Scope (Submission Ready)
+
+* Pomodoro timer engine
+* Configurable durations
+* Automatic session switching
+* AI-powered focus tips
+* Persistent state
+* Clean, intentional UX
 
 ---
 
-## 💡 How to Run Locally
-1. Clone the repo:  
-  ```bash
-  git clone git@github.com:YOUR_USERNAME/Denji.git
-2. Install dependencies:
-  npm install
-3. Add .env file with your Gemini API key:
-  VITE_GEMINI_API_KEY=your_api_key_here
-4. Start dev server:
-  npm run dev
-5. Open http://localhost:5173 in your browser
+## 🔮 Planned Features (Future Roadmap)
+
+* Habit tracking
+* Subject-based session tracking
+* Study statistics dashboard
+* Task integration
+* Exam countdown system
+* Long-term productivity analytics
+
+Denji is built to grow — structured, minimal, and scalable.
+
+---
+
+## 💻 Running Locally
+
+### 1️⃣ Clone the repository
+
+```bash
+git clone https://github.com/YOUR_USERNAME/Denji.git
+cd Denji
+```
+
+### 2️⃣ Install dependencies
+
+```bash
+npm install
+```
+
+### 3️⃣ Configure environment variables
+
+Create a `.env` file in the root directory:
+
+```
+VITE_GEMINI_API_KEY=your_api_key_here
+```
+
+### 4️⃣ Start the development server
+
+```bash
+npm run dev
+```
+
+### 5️⃣ Open in browser
+
+Visit:
+
+```
+http://localhost:5173
+```
+
+

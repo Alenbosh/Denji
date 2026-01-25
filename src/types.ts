@@ -12,6 +12,7 @@ export interface PomodoroSession {
   duration: number
   startedAtIST: string
   completedAtIST: string
+  subjectId: string | null;
 }
 
 export const DEFAULT_SETTINGS: PomodoroSettings = {

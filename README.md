@@ -1,5 +1,14 @@
 # 🧠 Denji — Focus, Time & Study Companion
 
+## 🖼 Timer Page
+![Timer Page](images/Pochita-Timer-Page.png)
+
+## 📊 Stats Dashboard
+![Stats Dashboard](images/Pochita-Stats_Dashboard.png)
+
+## ⚙️ Settings
+![Settings](images/Pochita-Settings-Page.png)
+
 **Live MVP:** [https://pochita-tau.vercel.app](https://pochita-tau.vercel.app)
 
 Denji is a **desktop-first** productivity app built with **React + TypeScript**. It centers on deep focus, intentional time tracking, and clean state management.
@@ -170,7 +179,10 @@ See [docs/focus-tip-fix-notes.md](docs/focus-tip-fix-notes.md) for details on th
 
 ## 📜 License
 
-Private / unlicensed (adjust as needed).
+MIT License © Manish (Alen)
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software, to deal in the software without restriction
+
+See the [LICENSE](LICENSE) file for details
 
 ---
 

@@ -9,9 +9,10 @@ export default function Layout() {
         <NavLink to="/">Timer</NavLink>
         <NavLink to="/stats">Stats</NavLink>
         <NavLink to="/settings">Settings</NavLink>
+        <NavLink to="/subjects">Subjects</NavLink>
       </nav>
 
-      {/* 👇 key triggers animation on route change */}
+      
       <main className="route-container" key={location.pathname}>
         <Outlet />
       </main>

@@ -12,7 +12,7 @@ import type { PomodoroSession } from "../types";
 import { loadSessions } from "../utils/storage";
 import { SubjectProvider } from "../features/subjects/SubjectContext";
 import SubjectStatsPage from "../pages/SubjectStatsPage";
-
+import { Analytics } from "@vercel/analytics/react"
 
 
 
@@ -171,6 +171,7 @@ export default function App() {
                         <Route path="/subjects" element={<SubjectStatsPage />} />
                     </Route>
                 </Routes>
+                <Analytics/>
                 <SpeedInsights />
             </SubjectProvider>
         </PomodoroContext.Provider>

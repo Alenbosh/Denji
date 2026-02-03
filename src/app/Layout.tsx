@@ -12,7 +12,7 @@ export default function Layout() {
         <NavLink to="/subjects">Subjects</NavLink>
       </nav>
 
-      {/* 👇 key triggers animation on route change */}
+      
       <main className="route-container" key={location.pathname}>
         <Outlet />
       </main>

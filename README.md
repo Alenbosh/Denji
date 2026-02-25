@@ -92,44 +92,6 @@ At its core, Denji is a **Pomodoro engine** built to evolve into a full **Studen
 
 ---
 
-## 💻 Running Locally
-
-### 1. Clone & install
-
-```bash
-git clone https://github.com/YOUR_USERNAME/Denji.git
-cd Denji
-npm install
-```
-
-### 2. Start the app
-
-```bash
-npm run dev
-```
-
-Then open **http://localhost:5173**.
-
-- **Timer, Stats, Settings** work fully. Sessions and settings persist in LocalStorage.
-- **Focus tips** will show the fallback (“Focus on one task…”) because the app calls `/api/focus-tip`, which is **not** run by `vite`.
-
-### 3. (Optional) Focus tips locally
-
-To use **real** Gemini tips locally:
-
-1. Install [Vercel CLI](https://vercel.com/docs/cli) and log in.
-2. Add `GEMINI_API_KEY` in [Vercel Project → Settings → Environment Variables](https://vercel.com/docs/projects/environment-variables) (or use a `.env` when running `vercel dev`).
-3. Run:
-
-   ```bash
-   vercel dev
-   ```
-
-   This runs both the Vite app and the `api/focus-tip` serverless function.
-
-**No `.env` or API key** is required for `npm run dev`; only for focus tips (and only when using the API).
-
----
 
 ## 🧪 Scripts
 
@@ -164,16 +126,6 @@ Denji/
 ├── vite.config.ts
 └── package.json
 ```
-
----
-
-## 🚀 Deploying to Vercel
-
-1. Push the repo to GitHub and [import](https://vercel.com/docs/git) it in Vercel.
-2. Add **`GEMINI_API_KEY`** (from [Google AI Studio](https://aistudio.google.com/apikey)) in **Project → Settings → Environment Variables** for **Production** (and Preview if you use it).
-3. Deploy. The `api/` folder is used as serverless functions; `vercel.json` keeps `/api` out of SPA rewrites.
-
-See [docs/focus-tip-fix-notes.md](docs/focus-tip-fix-notes.md) for details on the focus-tip API, troubleshooting, and checklist.
 
 ---
 

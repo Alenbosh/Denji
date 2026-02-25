@@ -70,7 +70,7 @@ At its core, Denji is a **Pomodoro engine** built to evolve into a full **Studen
 
 ---
 
-## 🚀 MVP Scope (Submission Ready)
+## 🚀 MVP Features 
 
 - [x] Pomodoro timer with configurable durations
 - [x] Automatic session switching (focus → short/long break → focus)
